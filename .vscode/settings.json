@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/21290d8a-6d74-4904-9832-53feec51d390/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/apidiccionario",
+    "appService.deploySubpath": "."
+}
