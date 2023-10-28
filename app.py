@@ -5,8 +5,6 @@ from bson.json_util import dumps  # Importa dumps desde bson.json_util
 
 app = Flask(__name__)
 
-# Define the MongoDB URI
-#mongo_uri = "mongodb+srv://oswandor26:u3w6dhSXLjZ3iN0g@cluster0.mmmsz3e.mongodb.net/?retryWrites=true&w=majority"
 
 mongo_uri =  os.getenv("MONGO_URI")
 
