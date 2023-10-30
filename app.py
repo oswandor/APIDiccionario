@@ -30,8 +30,10 @@ def index(word):
              # Crear un diccionario con el orden deseado
             response_data = {
                 "word": results["word"],
-                "definition": results["definition"]
-            }
+                "definition": results["definition"],
+                "examples" : results["examples"],
+              
+             }
 
             return jsonify(response_data)
         else:
