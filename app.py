@@ -1,3 +1,4 @@
+
 import os
 from flask import Flask, redirect, render_template, request , send_from_directory, url_for , jsonify  
 from Models.MongoDBConnection import MongoDBConnection
@@ -5,6 +6,8 @@ from bson.json_util import dumps  # Importa dumps desde bson.json_util
 
 app = Flask(__name__)
 
+# Define the MongoDB URI
+#mongo_uri = "mongodb+srv://oswandor26:u3w6dhSXLjZ3iN0g@cluster0.mmmsz3e.mongodb.net/?retryWrites=true&w=majority"
 
 mongo_uri =  os.getenv("MONGO_URI")
 
@@ -28,8 +31,10 @@ def index(word):
              # Crear un diccionario con el orden deseado
             response_data = {
                 "word": results["word"],
-                "definition": results["definition"]
-            }
+                "definition": results["definition"],
+                "examples" : results["examples"],
+              
+             }
 
             return jsonify(response_data)
         else:
