@@ -3,9 +3,17 @@ import os
 from flask import Flask, redirect, render_template, request , send_from_directory, url_for , jsonify  
 from Models.MongoDBConnection import MongoDBConnection
 from bson.json_util import dumps  # Importa dumps desde bson.json_util
+from flask_cors import CORS
 
 app = Flask(__name__)
 
+
+# Configura CORS para permitir solicitudes desde cualquier origen en múltiples rutas
+cors = CORS(app, resources={
+    r"/definicion/*": {"origins": "http://localhost:8100"},
+    r"/sinonimos/*": {"origins": "http://localhost:8100"},
+    r"/antonimos/*": {"origins": "http://localhost:8100"}
+})
 # Define the MongoDB URI
 #mongo_uri = "mongodb+srv://oswandor26:u3w6dhSXLjZ3iN0g@cluster0.mmmsz3e.mongodb.net/?retryWrites=true&w=majority"
 
