@@ -89,23 +89,27 @@ git clone https://github.com/tu-usuario/api-diccionario.git
 2. Instala las dependencias:
 
 ```
-npm install
+pip install -r requirements.txt 
+
 ```
 
 3. Configura las variables de entorno necesarias, como la clave de acceso a la base de datos de diccionario.
 
+
+
 4. Inicia el servidor:
 
 ```
-npm start
+flask run --host=0.0.0.0 
+
 ```
 
 ## Configuración de Variables de Entorno
 
 Asegúrate de configurar las siguientes variables de entorno en un archivo `.env`:
 
-- `DB_URL`: La URL de conexión a la base de datos de diccionario.
-- `API_KEY`: Tu clave de acceso a la API.
+- `MONGO_URI`: La URL de conexión a la base de datos de diccionario.
+
 
 ## Contribuciones
 

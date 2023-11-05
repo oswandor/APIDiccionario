@@ -1,21 +1,12 @@
-{
-    "word": "música",
-    "definition": "La música es el arte de producir sonidos o melodías con instrumentos o la voz humana.",
-    "example"  :  ""
-    "synonyms": ["melodía", "armonía", "canción"],
-    "antonyms": ["silencio", "ruido"]
-}
 
-
-{
-    "word": "música",
-    "definition": "La música es el arte de producir sonidos o melodías con instrumentos o la voz humana.",
-    "examples": [
-        "Escucho música todos los días.",
-        "La música clásica es mi género favorito.",
-        "Estudiar con música de fondo me ayuda a concentrarme.",
-        "La música en vivo es una experiencia increíble."
-    ],
-    "synonyms": ["melodía", "armonía", "canción"],
-    "antonyms": ["silencio", "ruido"]
-}
+    {
+        "word": "amistad",
+        "definition": "La amistad es una relación afectiva entre dos o más personas basada en el afecto, la confianza y el apoyo mutuo.",
+        "examples": [
+            "La amistad verdadera perdura a lo largo del tiempo.",
+            "Mis amigos son como una segunda familia para mí.",
+            "La amistad es un tesoro invaluable."
+        ],
+        "synonyms": ["camaradería", "compañerismo", "solidaridad"],
+        "antonyms": ["enemistad", "hostilidad", "antipatía"]
+    }
