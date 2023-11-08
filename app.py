@@ -44,6 +44,7 @@ def index(word):
               
              }
 
+
             return jsonify(response_data)
         else:
             return "No se encontraron definiciones para la palabra: " + word
