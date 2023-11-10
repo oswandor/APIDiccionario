@@ -10,9 +10,9 @@ app = Flask(__name__)
 
 # Configura CORS para permitir solicitudes desde cualquier origen en múltiples rutas
 cors = CORS(app, resources={
-    r"/definicion/*": {"origins": "http://localhost:8100"},
-    r"/sinonimos/*": {"origins": "http://localhost:8100"},
-    r"/antonimos/*": {"origins": "http://localhost:8100"}
+    r"/definicion/*": {"origins": "*"},
+    r"/sinonimos/*": {"origins": "*"},
+    r"/antonimos/*": {"origins": "*"}
 })
 # Define the MongoDB URI
 #mongo_uri = "mongodb+srv://oswandor26:u3w6dhSXLjZ3iN0g@cluster0.mmmsz3e.mongodb.net/?retryWrites=true&w=majority"
