@@ -30,7 +30,7 @@ mongo_connection = MongoDBConnection(mongo_uri)
 def index(word):
     try:
         # Intentar establecer la conexión a MongoDB
-        mongo_connection.connect()
+        mongo_connection.connect("dbdiccionario" , "diccionario")
             
         # Realizar consultas a la base de datos usando el método perform_query
         results = mongo_connection.perform_query({"word": word})
@@ -48,14 +48,17 @@ def index(word):
             return jsonify(response_data)
         else:
             return "No se encontraron definiciones para la palabra: " + word
+
     except  Exception as e:  
         return jsonify(e) 
+
+
 
 @app.route('/sinonimos/<word>')
 def sinonimos(word):
     try:
         # Intentar establecer la conexión a MongoDB
-        mongo_connection.connect()
+        mongo_connection.connect("dbdiccionario" , "diccionario")
 
         # Realizar consultas a la base de datos usando el método perform_query
         results = mongo_connection.perform_query({"word": word})
@@ -74,7 +77,7 @@ def sinonimos(word):
 def antonimos(word): 
     try:
         # Intentar establecer la conexión a MongoDB
-        mongo_connection.connect()
+        mongo_connection.connect("dbdiccionario" , "diccionario")
 
         # Realizar consultas a la base de datos usando el método perform_query
         results = mongo_connection.perform_query({"word": word})
@@ -88,7 +91,52 @@ def antonimos(word):
        return jsonify({"error": str(err)})
 
 
+# obtener la lista de Favoritos para el usuario 
+@app.route("/allUserFavorites") 
+def allUserFavorites():
+    try: 
+        # Intentar establecer conexcion 
+        mongo_connection.connect("dbdiccionario" , "userFavorites")
 
+        # Definir el pipeline de agregación
+        user_uid = "xfasdfafasdfasdfasd"
+        # Definir el pipeline de agregación
+        pipeline = [
+            {
+                "$match": {"userUID": user_uid}
+            },
+            {
+                "$lookup": {
+                    "from": "diccionario",
+                    "localField": "_idrelacion",
+                    "foreignField": "_id",
+                    "as": "favoritos"
+                }
+            },
+            {
+                "$unwind": "$favoritos"
+            },
+            {
+                "$project": {
+                    "_id": 0,
+                    "userUID": 1,
+                    "favoritos.word": 1,
+                    "favoritos.definition": 1,
+                    "favoritos.examples": 1,
+                    "favoritos.synonyms": 1,
+                    "favoritos.antonyms": 1
+                }
+            }
+        ]
+        result = mongo_connection.aggregate_query(pipeline)
+
+        # Imprimir el resultado
+        print(result)
+
+        return(jsonify(result))
+    except Exception as err:
+        return jsonify({"error": str(err)}) 
+        
 
 
 @app.route('/favicon.ico')
