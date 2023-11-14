@@ -138,6 +138,34 @@ def allUserFavorites():
         return jsonify({"error": str(err)}) 
         
 
+@app.router('/addFavorite' , methods=['POST']]) 
+def addFavorite(): 
+
+    try: 
+        # conexcion a mongo db 
+        dbConnection = mongo_connection("dbdiccionario" , "userFavorites") 
+        
+        
+        uid = request.form.get('_uid')
+        idDiccionary = request.form.get('_idDiccionary')
+
+        #  si los argumentos son distintos de null 
+        if(uid != None  and idDiccionary != None): 
+
+            objectfavorites = {
+                "_uid" : uid , 
+                "_idDiccionary" : idDiccionary
+            }
+            # agregar a favoritos con el ID  y la relacion de la palabra 
+            dbConnection.add_tofavorites(objectfavorites) 
+            # desconectar de la base de datos 
+            dbConnection.disconnect() 
+            return jsonify({"message": "success"})
+    except Exception as e: 
+        # enviar el error
+        return jsonify({"error": str(e)})
+
+
 
 @app.route('/favicon.ico')
 def favicon():
