@@ -32,6 +32,20 @@ class MongoDBConnection:
         except Exception as e:
             print(e)
 
+    def add_tofavorites(self, objectfavorites): 
+        try: 
+            return self.collection.insert_one(objectfavorites) 
+        except  Exception as e: 
+            print(e)        
+
+    def delete_documents(self, query={}):
+        try:
+            result = self.collection.delete_one(query)
+            return result.deleted_count  # Retorna la cantidad de documentos eliminados
+        except Exception as e:
+            print(e)
+
+
     def disconnect(self):
         if self.client is not None:
             self.client.close()

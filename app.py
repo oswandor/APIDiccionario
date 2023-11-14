@@ -4,6 +4,8 @@ from flask import Flask, redirect, render_template, request , send_from_director
 from Models.MongoDBConnection import MongoDBConnection
 from bson.json_util import dumps  # Importa dumps desde bson.json_util
 from flask_cors import CORS
+from bson import ObjectId
+ 
 
 app = Flask(__name__)
 
@@ -92,23 +94,24 @@ def antonimos(word):
 
 
 # obtener la lista de Favoritos para el usuario 
-@app.route("/allUserFavorites") 
-def allUserFavorites():
+@app.route('/allUserFavorites/<uid>') 
+def allUserFavorites(uid):
     try: 
         # Intentar establecer conexcion 
         mongo_connection.connect("dbdiccionario" , "userFavorites")
 
         # Definir el pipeline de agregación
-        user_uid = "xfasdfafasdfasdfasd"
+        user_uid = str(uid)
+        print(uid)
         # Definir el pipeline de agregación
         pipeline = [
             {
-                "$match": {"userUID": user_uid}
+                "$match": {"_uid": user_uid}
             },
             {
                 "$lookup": {
                     "from": "diccionario",
-                    "localField": "_idrelacion",
+                    "localField": "_idDiccionary",
                     "foreignField": "_id",
                     "as": "favoritos"
                 }
@@ -118,7 +121,7 @@ def allUserFavorites():
             },
             {
                 "$project": {
-                    "_id": 0,
+                    "_id": 1,
                     "userUID": 1,
                     "favoritos.word": 1,
                     "favoritos.definition": 1,
@@ -128,42 +131,78 @@ def allUserFavorites():
                 }
             }
         ]
+        
         result = mongo_connection.aggregate_query(pipeline)
+
+        # Convertir ObjectId a cadena antes de serializar a JSON
+        result = dumps(result)
 
         # Imprimir el resultado
         print(result)
 
-        return(jsonify(result))
+        return result, 200, {'Content-Type': 'application/json'}
     except Exception as err:
         return jsonify({"error": str(err)}) 
-        
 
-@app.router('/addFavorite' , methods=['POST']]) 
+
+# agregar por metodo POST  
+@app.route('/addFavorite', methods=['POST']) 
 def addFavorite(): 
-
     try: 
-        # conexcion a mongo db 
-        dbConnection = mongo_connection("dbdiccionario" , "userFavorites") 
+        # conexión a MongoDB 
+        mongo_connection.connect("dbdiccionario", "userFavorites") 
         
-        
-        uid = request.form.get('_uid')
-        idDiccionary = request.form.get('_idDiccionary')
+        # Obtén los datos JSON de la solicitud
+        data = request.get_json()
 
-        #  si los argumentos son distintos de null 
-        if(uid != None  and idDiccionary != None): 
+        # Verifica que se hayan proporcionado todos los campos necesarios
+        if 'uid' not in data or 'idDiccionary' not in data:
+            return jsonify({"error": "Missing uid or idDiccionary"})
 
-            objectfavorites = {
-                "_uid" : uid , 
-                "_idDiccionary" : idDiccionary
-            }
-            # agregar a favoritos con el ID  y la relacion de la palabra 
-            dbConnection.add_tofavorites(objectfavorites) 
-            # desconectar de la base de datos 
-            dbConnection.disconnect() 
-            return jsonify({"message": "success"})
+        uid = data['uid']
+        idDiccionary = data['idDiccionary']
+
+        objecdiccionary  = ObjectId(idDiccionary)
+        # Agrega a favoritos con el ID y la relación de la palabra 
+        objectfavorites = {
+            "_uid": uid, 
+            "_idDiccionary": objecdiccionary
+        }
+        mongo_connection.add_tofavorites(objectfavorites) 
+
+        # Desconéctate de la base de datos 
+        mongo_connection.disconnect() 
+
+        return jsonify({"message": "success"})
     except Exception as e: 
-        # enviar el error
+        # Enviar el error
         return jsonify({"error": str(e)})
+
+
+
+
+
+# Eliminar favoritos por idDiccionary
+@app.route('/deleteUserFavoritesByIdDiccionary/<uid>/<idDiccionary>', methods=['DELETE'])
+def deleteUserFavoritesByIdDiccionary(uid, idDiccionary):
+    try:
+        # Intentar establecer conexión
+        mongo_connection.connect("dbdiccionario", "userFavorites")
+
+        objecdiccionary  = ObjectId(idDiccionary)
+        # Eliminar registros que coincidan con el UID e idDiccionary
+        delete_result = mongo_connection.delete_documents({"_uid": uid, "_idDiccionary": objecdiccionary })
+
+        # Imprimir el resultado de la eliminación
+        print(f"Deleted {delete_result} records for UID: {uid} and idDiccionary: {idDiccionary}")
+
+        # Desconectar de la base de datos
+        mongo_connection.disconnect()
+
+        return jsonify({"message": "success"})
+    except Exception as err:
+        return jsonify({"error": str(err)})
+
 
 
 
