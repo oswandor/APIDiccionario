@@ -40,6 +40,7 @@ def index(word):
         if results:
              # Crear un diccionario con el orden deseado
             response_data = {
+                "_id" : str(results['_id']) ,
                 "word": results["word"],
                 "definition": results["definition"],
                 "examples" : results["examples"],
@@ -67,7 +68,7 @@ def sinonimos(word):
 
         if results:
             sinonimos = results.get("synonyms", [])
-            return jsonify({"word": word, "sinonimos": sinonimos})
+            return jsonify({   "_id" : str(results['_id']) ,  "word": word, "sinonimos": sinonimos})
         else:
             return "No se encontraron definiciones para la palabra: " + word
     except Exception as e:
@@ -86,7 +87,7 @@ def antonimos(word):
 
         if results:
             antonimos = results.get("antonyms", [])
-            return jsonify({"word": word, "antonimos": antonimos})
+            return jsonify({   "_id" : str(results['_id']) , "word": word, "antonimos": antonimos})
         else:
             return "No se encontraron definiciones para la palabra: " + word
     except Exception as err:
