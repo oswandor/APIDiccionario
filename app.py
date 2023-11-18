@@ -120,6 +120,7 @@ def allUserFavorites(uid):
                 "$project": {
                     "_id": 1,
                     "userUID": 1,
+                    "favoritos._id": 1 , 
                     "favoritos.word": 1,
                     "favoritos.definition": 1,
                     "favoritos.examples": 1,
