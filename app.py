@@ -11,11 +11,7 @@ app = Flask(__name__)
 
 
 # Configura CORS para permitir solicitudes desde cualquier origen en múltiples rutas
-cors = CORS(app, resources={
-    r"/definicion/*": {"origins": "*"},
-    r"/sinonimos/*": {"origins": "*"},
-    r"/antonimos/*": {"origins": "*"}
-})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 # Define the MongoDB URI
 #mongo_uri = "mongodb+srv://oswandor26:u3w6dhSXLjZ3iN0g@cluster0.mmmsz3e.mongodb.net/?retryWrites=true&w=majority"
 
